@@ -5,18 +5,11 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
-)
 
-func getenv(name string) string {
-	val := os.Getenv(name)
-	if val == "" {
-		panic("missing required environment variable " + name)
-	}
-	return val
-}
+	"github.com/devald/getenv"
+)
 
 type weatherProvider interface {
 	temperature(city string) (float64, error)
@@ -118,8 +111,8 @@ func (w multiWeatherProvider) temperature(city string) (float64, error) {
 
 func main() {
 	mw := multiWeatherProvider{
-		openWeatherMap{apiKey: getenv("OWM_API_KEY")},
-		weatherUnderground{apiKey: getenv("WU_API_KEY")},
+		openWeatherMap{apiKey: getenv.Variable("OWM_API_KEY")},
+		weatherUnderground{apiKey: getenv.Variable("WU_API_KEY")},
 	}
 
 	http.HandleFunc("/weather/", func(w http.ResponseWriter, r *http.Request) {
